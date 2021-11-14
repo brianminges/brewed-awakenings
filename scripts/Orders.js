@@ -1,4 +1,5 @@
 import { getProducts, getEmployees, getOrders } from "./database.js"
+ 
 
 // Get copy of state for use in this module
 const products = getProducts()
@@ -10,7 +11,7 @@ const orders = getOrders()
 const findproduct = (order, allProducts) => {
     let orderProduct = null
 
-    for (const product of products) {
+    for (const product of allProducts) {
         if (product.id === order.productId) {
             orderProduct = product
         }
@@ -23,10 +24,10 @@ const findproduct = (order, allProducts) => {
 const findemployee = (order, allEmployees) => {
     let orderEmployee = null
 
-    for (const employee in allEmployees) {
+    for (const employee of employees) {
         if (employee.id === order.employeeId) {
             orderEmployee = employee
-        }
+        } 
     }
 
     return orderEmployee
@@ -35,12 +36,16 @@ const findemployee = (order, allEmployees) => {
 export const Orders = () => {
     let html = ""
     html = "<ul>"
+    
 
     for (const order of orders) {
         const employee = findemployee(order, employees)
-        const product = findproduct(order)
-
-        html += `<li>${product.name} was sold by ${employees.name} on ${new Date(order.timestamp).toLocaleDateString()}</li>`
+        const product = findproduct(order, products)
+        if (employee) { 
+        html += `<li>${product.name} was sold by ${employee.name} on ${new Date(order.timestamp).toLocaleDateString()}</li>`
+        } else {
+            html += `<li>code is messed up</li>`
+        }
     }
 
     html += "</ul>"
